@@ -1,7 +1,7 @@
 # CrowdHydrology Mobile App
 A mobile app for collecting data from the CrowdHydrology markings around the Northeast United States.
 
-#### Initial Requirements
+### Initial Requirements
 PIP (Python Package Index) for installing required python packages with ease:
 
 ```
@@ -50,7 +50,7 @@ which takes a snapshot of all of the currently installed dependencies. (NOTE! If
 Great! With everything installed you're all set. Everytime you want to develop in this environment simply navigate to the directory. Source your shell to this virtual environment and continue your work.
 
 
-#### Running the server
+### Running the server
 
 Getting the server running requires some more configuration. To run the actual app simply:
 
