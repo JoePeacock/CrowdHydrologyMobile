@@ -1,0 +1,82 @@
+    body{
+        margin:0px;
+        background: #b7d7ff;
+        font-family: 'Raleway', sans-serif;
+      }
+      #sectionHeader{
+        background: url('../../img/campus2.jpg') #000 fixed no-repeat;
+	background-color: black;
+	background-size:cover;
+        /* background-color: #ececec;*/
+        height: 100vh;
+        width:100vw;
+      }
+      #sectionAbout{
+        background-color: #ffffff;
+        padding-bottom:110px;
+        height: 150%;
+        padding-top:100px;
+      }
+      #sectionLinks{
+        padding-bottom:110px;
+        padding-top: 100px;
+      }
+      #sectionGroup{
+        background-color: #ececec;
+      }
+       #sectionContact{
+        background: url('../../img/snow.jpg') #000 fixed no-repeat;
+	background-color: black;
+	background-size:cover;
+        /* background-color: #ececec;*/
+        color:#ffffff;
+        padding-bottom:10px;
+      }
+      #divContact{
+        width:40vw;
+      }
+      form{
+        font-weight:200;
+      }
+    
+      #wrap{
+        min-height:100%;
+      }
+      #huge{
+        font-size: 128px;
+        color: #ff9631;
+        font-weight: 100;
+        padding-bottom: 0px;
+        margin-bottom: 0px;
+        
+      }
+      #huge-h2{
+        font-size:5vh;
+        font-weight:100;
+        padding-top:0px;
+        color: #ffffff;
+      }
+      .container{
+        padding: 0px;
+      }
+      
+      #fade {
+        border:2px solid;
+        opacity: .5;
+        transition: opacity .25s ease-in-out;
+        -moz-transition: opacity .25s ease-in-out;
+        -webkit-transition: opacity .25s ease-in-out;
+        width:300px;
+        height:300px;
+      }
+      #fade:hover {
+       opacity: 0.8;
+      }
+      
+      #profilePic{
+        border:2px solid;
+      }
+      
+      #header{
+        padding-top:30vh;
+      }

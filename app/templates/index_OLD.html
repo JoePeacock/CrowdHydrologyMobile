@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Crowd Hydrology</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"">
+    
+  <link rel="apple-touch-icon" href="/custom_icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <script type="text/javascript">
+  if(("standalone" in window.navigator) && window.navigator.standalone){
+    var noddy, remotes = false;
+    document.addEventListener('click', function(event) {
+      noddy = event.target;
+      while(noddy.nodeName !== "A" && noddy.nodeName !== "HTML") {
+  noddy = noddy.parentNode;
+      }
+      if('href' in noddy && noddy.href.indexOf('http') !== -1 && (noddy.href.indexOf(document.location.host) !== -1 || remotes)){
+  event.preventDefault();
+  document.location.href = noddy.href;
+      }
+    },false);
+  }
+  </script>
+
+    
+    <!-- Bootstrap -->
+    <link href="./dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,200,100,500' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat+Alternates|Hammersmith+One' rel='stylesheet' type='text/css'>
+    <link href="./navbar-green.css" rel="stylesheet" media="screen">
+  <style>
+    
+    #sectionHeader{
+        background: url('../river.jpg') #000 fixed no-repeat;
+  background-color: black;
+        background-position:center; 
+  background-size:cover;
+        /* background-color: #ececec;*/
+      }
+      .title{
+        font-size: 8vw;
+        color: #ffffff;
+        font-family: 'Raleway', sans-serif;
+        padding-top: 2vh;
+        padding-left: 1vw;
+      }
+      .title-dark{
+        font-size: 8vw;
+        color: #373737;
+        font-family: 'Raleway', sans-serif;
+        padding-top: 2vh;
+        padding-left: 1vw;
+      }
+      .description{
+        font-size: 4.5vw;
+        color: #ffffff;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 200;
+        padding: 5px;
+      }
+      .description-dark{
+        font-size: 4.5vw;
+        color: #373737;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 200;
+        padding: 5px;
+      }
+      .titleText{
+        font-size: 10vw;
+        color: #ffffff;
+        font-family: 'Hammersmith One', sans-serif;
+        padding-top: 160px;
+      }
+    #about{
+        height:100%;
+        width:100vw;
+        background-color: #cfcac8;
+    }
+    
+    #sponsors{
+        padding-top:10px;
+        padding-bottom:10px;
+        height:100%;
+    }
+  </style>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="./dist/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="./dist/js/email.js"></script>
+     </head>
+  
+  
+  
+<body style="padding-top: 50px;font-family: 'Raleway', sans-serif;">
+
+<section id="sectionHeader" style="height: 478px;width:100vw;">
+    <center><p class="titleText">Water level data,<br>crowdsourced.</p></center>
+</section>
+<section id="about">
+    <center><p class="title-dark">About us</p></center>
+    <hr width="60%">
+    <p class="description-dark">The CrowdHydrology mission is to create freely available data on stream stage in a simple and inexpensive way.
+    We do this through the use of "crowd sourcing", which means we gather information on stream stage (water levels) from anyone willing to send us a
+    text message of the water levels at their local stream.  These data are then available for anyone to then use from Universities to Elementary schools.  </p>
+</section>
+<section id="section" style="height:100%; width:100vw; background-color: #304d30;">
+    <center><p class="title">Why is it useful?</p></center>
+    <hr width="60%">
+    <p class="description">Here are some examples of what you can do with these data:<br><br>
+-Check the stream condition of your favorite fishing spot<br>
+-Monitor the spring snowmelt<br>
+-Teach students about the hydrologic cycle in your watershed<br>
+-Quantify groundwater and surface water exchange in streams<br>
+<br><br>
+The methodology behind CrowdHydrology is that one person or one agency can’t afford to monitor every stream but if we work together we can start to fill in the gaps.
+<br><br>
+At the end of the day we are all scientists.</p>
+</section>
+<section style="height:100px; width:100vw; background-color: #cfcac8;">
+    <center><p class="title"><a href="./submit.html">Let's get started.</a></p></center>
+</section>
+<section id="sponsors">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-6"><center><img src="http://crowdhydrology.geology.buffalo.edu/CrowdHydrology/Home_files/2-line_blue_gray.jpg" style="width:40vw;"></center></div>
+            <div class="col-xs-6"><center><img src="http://crowdhydrology.geology.buffalo.edu/CrowdHydrology/Home_files/USGSnew.png" style="width:20vw;"></center></div>
+        </div>
+    </div>
+</section>
+</body>
+    
+</html>
+{% extends "header.shtml" %}

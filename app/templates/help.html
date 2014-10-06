@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Group 6: Water Level Wizards</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"">
+      
+    <link rel="apple-touch-icon" href="/custom_icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <script type="text/javascript">
+  if(("standalone" in window.navigator) && window.navigator.standalone){
+    var noddy, remotes = false;
+    document.addEventListener('click', function(event) {
+      noddy = event.target;
+      while(noddy.nodeName !== "A" && noddy.nodeName !== "HTML") {
+	noddy = noddy.parentNode;
+      }
+      if('href' in noddy && noddy.href.indexOf('http') !== -1 && (noddy.href.indexOf(document.location.host) !== -1 || remotes)){
+	event.preventDefault();
+	document.location.href = noddy.href;
+      }
+    },false);
+  }
+  </script>  
+      
+    <!-- Bootstrap -->
+    <link href="../static/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,200,100,500' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat+Alternates|Hammersmith+One' rel='stylesheet' type='text/css'>
+    <link href="../static/navbar-green.css" rel="stylesheet" media="screen">
+  <style>
+      .title{
+        font-size: 8vw;
+        color: #ffffff;
+        font-family: 'Raleway', sans-serif;
+        padding-top: 2vh;
+        padding-left: 1vw;
+      }
+      .title-dark{
+        font-size: 8vw;
+        color: #373737;
+        font-family: 'Raleway', sans-serif;
+        padding-top: 2vh;
+        padding-left: 1vw;
+      }
+      .description{
+        font-size: 4.5vw;
+        color: #ffffff;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 200;
+        padding: 5px;
+      }
+      .description-dark{
+        font-size: 4.5vw;
+        color: #373737;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 200;
+        padding: 5px;
+      }
+      .titleText{
+        font-size: 10vw;
+        color: #ffffff;
+        font-family: 'Hammersmith One', sans-serif;
+        padding-top: 160px;
+      }
+      .help-block{
+        font-size: 8px;
+      }
+      
+  </style>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="../static/dist/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+     </head>
+  
+  
+  
+<body style="padding-top: 50px;font-family: 'Raleway', sans-serif;">
+
+
+<center><p class="title-dark">Help</p></center>
+    <hr width="60%">
+<div style="margin-left:2.5vw; margin-right:2.5vw;">
+<h2>How to submit data:</h2>
+<ul>
+  <li>Press the “submit” button on the home page or go to the “Submit a measurement” screen from the main menu.</li>
+  <li>Fill out the fields on the submit page </li>
+  <li>Station ID Number: If there’s a descriptive plaque from the CrowdHydrology plaque near the post, enter the ID from that plaque. Otherwise, leave this field blank.</li>
+  <li>Water Level: Enter the water level you see on the measuring post here, in feet.</li>
+  <li>Clarity: Pick the clarity level that best matches the conditions near the shore of your body of water. </li>
+<li>Picture of Water Level: Select “choose file” to take a picture of the measuring post and send it in. If you can zoom in enough to read the numbers on the post, that’s helpful.</li>
+<li>Press “submit”.</li>
+</ul>
+
+<h2>How to view the map of measuring stations:</h2>
+
+<li>From the main menu, select “view”. This will show you a map the CrowdHydrology measuring stations.</li>
+
+<li>To check the data of a particular station, press the icon that marks its location. A bubble will pop up, giving the station number, water body, and a link that says “view data”. Press that link to view the data.</li>
+
+<li>Data you enter is automatically added to the database, and will show up when you the view data shortly afterward.</li>
+
+
+
+
+
+
+<br>
+<table>
+  <tr>
+    <td>Field</td><td>Text</td>
+<tr>
+<td>“Station ID”</td><td>  If there’s a descriptive plaque near the post, enter the station ID from that plaque. 
+Otherwise, leave blank.</td>
+</tr>
+<tr>
+<td>“Water Level”</td><td> Enter the water level here in feet, not inches.</td>
+</tr>
+<tr>
+<td>“Clarity”</td><td> Select the field that most closely matches the water clarity near the shoreline.</td>
+</tr>
+<tr>
+<td>“Picture of water level”</td><td>
+  Select “choose file” to take a picture of the measuring post and send it in.
+</td>
+</tr>
+</table>
+</div>
+
+
+
+<br>
+</body>
+    
+</html>
+{% extends "header.shtml" %}

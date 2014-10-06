@@ -1,0 +1,67 @@
+@media screen and (max-width: 480px) {
+        body{
+          width: 100vw;
+        }
+          body{
+        margin:0px;
+        padding: 0px;
+        background: #b7d7ff;
+        font-family: 'Raleway', sans-serif;
+        }
+        #sectionHeader{
+          background: url('./img/campus2.jpg') #000 fixed no-repeat;
+          background-color: black;
+          background-size:cover;
+          /* background-color: #ececec;*/
+          height: 400px;
+          width:100vw;
+        }
+        #header{
+        padding-top:inherit;
+      }
+     /* #sectionAbout{
+        width:100vw;
+      }
+      #sectionLinks{
+        width:100vw;
+        background-color: #ff5b44;
+        height:100%;
+      }
+      #sectionGroup{
+        width:100vw;
+        height:100%;
+      }
+      #sectionContact{
+        width:100vw;
+        height:100%;
+      }
+      #fade{
+        width:150px;
+        height:150px;
+      }*/
+        #huge{
+          color: #ff9631;
+          font-weight: 100;
+          padding-bottom: 0px;
+          margin-bottom: 0px;
+          font-size: inherit;
+        }
+        #huge-h2{
+          font-weight:100;
+          padding-top:0px;
+          color: #ffffff;
+          font-size: inherit;
+        }
+            
+        #break{
+          border-bottom: solid 1px;
+          width: 90%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+               
+        #workbox{
+          width: auto;
+          margin-right: 24px;
+        }
+      }
