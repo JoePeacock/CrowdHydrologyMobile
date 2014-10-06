@@ -1,14 +1,14 @@
 # CrowdHydrology Mobile App
-A mobile app for collecting data from the CrowdHydrology markings around the Northeast United States. A Flask app with some fany front-ends and WTForms.
+A mobile app for collecting data from the CrowdHydrology markings around the Northeast United States.
 
 #### Initial Requirements
-Pip (Python Package Index) for installing required python packages with ease:
+PIP (Python Package Index) for installing required python packages with ease:
 
 ```
 $ curl --silent --show-error --retry 5 https://bootstrap.pypa.io/get-pip.py | sudo python2.7
 ```
 
-Once pip is installed we need to install a package called virtualenv to setup our local environment for the app. This allows to keep all of the extra dependencies out of the main python index on the system, and allows for package version control. 
+Once pip is installed we need to install a package called virtualenv to setup our local environment for the app. This allows us to keep all of the extra dependencies out of the main python index on the system, and some package version control. 
 
 This should be installed to the system python dependenices, hence sudo. 
 
@@ -49,6 +49,16 @@ which takes a snapshot of all of the currently installed dependencies. (NOTE! If
 
 Great! With everything installed you're all set. Everytime you want to develop in this environment simply navigate to the directory. Source your shell to this virtual environment and continue your work.
 
+
+#### Running the server
+
+Getting the server running requires some more configuration. To run the actual app simply:
+
+```
+python run.py
+```
+
+This will start a process on port ```5000``` and listen to incoming requests from there. Based on the current server confirugation this will have to change.
 
 
 
