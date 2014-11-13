@@ -102,7 +102,6 @@ def send_mail_no_image(form):
     msg.attach(text)
 
     # body_of_email can be plaintext or html!
-    #content = headers + "\r\n\r\n" + body_of_email
     session.sendmail(gmail_username, recipient, msg.as_string())
 
 
