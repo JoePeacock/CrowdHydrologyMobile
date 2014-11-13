@@ -15,13 +15,6 @@ class RegistrationForm(Form):
     image = TextField('Profile Picture (URL):')
 
 
-"""
-class LoginForm(Form):
-	username = TextField('Username:', [validators.Required()], id="username")
-	password = PasswordField('Password:', [validators.Required()], id="password")
-"""
-
-
 class EventForm(Form):
     event_name = TextField('Event Name:', [validators.Required(),
                                            validators.Length(min=1, max=25)])
