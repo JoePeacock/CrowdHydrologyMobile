@@ -17,8 +17,8 @@ app = Flask(__name__)
 app.secret_key = c.SECRET_KEY
 app.config['UPLOAD_FOLDER'] = c.UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-db = SQLAlchemy(app)
 
+db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -134,4 +134,7 @@ def help_view():
 @app.route('/data/<label_name>')
 def show_results(label_name):
     return render_template("data.html", marker=label_name)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0",  port=5000, debug=True)
 
