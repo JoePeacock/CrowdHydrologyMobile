@@ -33,3 +33,5 @@ class EventForm(Form):
 
 class EditImage(Form):
     image = TextField('Profile Picture (URL):')
+
+

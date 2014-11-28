@@ -7,30 +7,21 @@ import smtplib
 from flask import Flask
 from flask import render_template
 from flask import request
-from werkzeug.utils import secure_filename
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy, Model
 
 import config as c
-
 
 app = Flask(__name__)
 app.secret_key = c.SECRET_KEY
 app.config['UPLOAD_FOLDER'] = c.UPLOAD_FOLDER
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./crowd_hydrology.db'
+
 db = SQLAlchemy(app)
+from app.models.station import Station
+from app.models.data import Data
 
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
-    email = db.Column(db.String(120), unique=True)
-
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
-
-    def __repr__(self):
-        return '<User %r>' % self.username
+db.create_all()
 
 
 def allowed_file(filename):
@@ -51,75 +42,34 @@ def submit():
 @app.route('/submit_confirm', methods=['POST'])
 def submit_confirm():
     form = request.form
-    if request.method == 'POST':
-        uploaded_file = request.files['picture']
+    marker = form["marker"].upper()
+    station = Station.query.filter_by(name=marker).first()
+    if station is not None and station.online:
+        try:
+            point = Data(water_level=float(form["water_level"]),
+                         water_clarity=int(form["clarity_value"]))
+            station.data_points.append(point)
+            db.session.commit()
+            return render_template("submit_confirm.html",
+                                   water_level=form["water_level"],
+                                   station=marker,
+                                   water_clarity=form['clarity_value'])
+        except ValueError:
+            return render_template("submit.html",
+                               error="The measurement entered was formatted incorrectly. Make sure you only use numbers."), 400
     else:
-        send_mail_no_image(form)
-    if uploaded_file and allowed_file(uploaded_file.filename):
-        filename = secure_filename(uploaded_file.filename)
-        uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        send_email(os.path.join(app.config['UPLOAD_FOLDER'], filename), form)
-    water_level = form['Water_Level']
-    return render_template("submit_confirm.html", water_level=water_level,
-                           station=form['marker'],
-                           water_clarity=form['clarityRadios'])
+        return render_template("submit.html",
+                               error="No location "+marker+". Please verify the marker ID and resubmit."), 400
 
-
-def send_email(file_name, form):
-    gmail_username = 'sviztsp'
-    gmail_password = 'vizvizviz'
-    email_subject = 'Data from '+form['marker']
-    recipient = 'sviztsp@gmail.com'
-    body_of_email = 'Marker: '+form['marker']+'\n'
-    body_of_email += 'Water Level: '+form['Water_Level']+'\n'
-    body_of_email += 'Water Clarity: '+form['clarityRadios']
-
-    session = smtplib.SMTP('smtp.gmail.com', 587)
-    session.ehlo()
-    session.starttls()
-    session.login(gmail_username, gmail_password)
-
-    msg = MIMEMultipart()
-    msg['Subject'] = email_subject
-    msg['From'] = gmail_username
-    msg['To'] = recipient
-
-    text = MIMEText(body_of_email)
-    msg.attach(text)
-    img_data = open(file_name, 'rb').read()
-    image = MIMEImage(img_data, name=os.path.basename(file_name))
-    msg.attach(image)
-
-    # body_of_email can be plaintext or html!
-    #content = headers + "\r\n\r\n" + body_of_email
-    session.sendmail(gmail_username, recipient, msg.as_string())
-
-
-def send_mail_no_image(form):
-    gmail_username = 'sviztsp'
-    gmail_password = 'vizvizviz'
-    email_subject = 'Data from '+form['marker']
-    recipient = 'sviztsp@gmail.com'
-    body_of_email = 'Marker: '+form['marker']+'\n'
-    body_of_email += 'Water Level: '+form['Water_Level']+'\n'
-    body_of_email += 'Water Clarity: '+form['clarityRadios']
-
-    session = smtplib.SMTP('smtp.gmail.com', 587)
-    session.ehlo()
-    session.starttls()
-    session.login(gmail_username, gmail_password)
-
-    msg = MIMEMultipart()
-    msg['Subject'] = email_subject
-    msg['From'] = gmail_username
-    msg['To'] = recipient
-
-    text = MIMEText(body_of_email)
-    msg.attach(text)
-
-    # body_of_email can be plaintext or html!
-    session.sendmail(gmail_username, recipient, msg.as_string())
-
+        # if request.method == 'POST':
+        # uploaded_file = request.files['picture']
+        # else:
+        # send_mail_no_image(form)
+        # if uploaded_file and allowed_file(uploaded_file.filename):
+        # filename = secure_filename(uploaded_file.filename)
+        # uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # send_email(os.path.join(app.config['UPLOAD_FOLDER'], filename), form)
+        # water_level = form['Water_Level']
 
 @app.route('/view')
 def view_map():
