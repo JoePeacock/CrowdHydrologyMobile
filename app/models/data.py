@@ -1,5 +1,9 @@
+import time
+
+from sqlalchemy_utils import ArrowType
+import arrow
+
 from app import db
-from datetime import datetime
 
 
 class Data(db.Model):
@@ -14,7 +18,15 @@ class Data(db.Model):
     water_clarity = db.Column(db.Integer)
     image = db.Column(db.String)
 
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(ArrowType, default=arrow.now)
+
+    def serialize(self):
+        return {
+            'water_level': self.water_level,
+            'water_clarity': self.water_clarity,
+            'image': self.image,
+            'created': self.created_at.timestamp
+        }
 
     def __init__(self, **kwargs):
         self.__dict__.update(**kwargs)

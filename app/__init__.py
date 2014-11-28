@@ -4,7 +4,7 @@ from email.mime.multipart import MIMEMultipart
 import os
 import smtplib
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask import render_template
 from flask import request
 from flask.ext.sqlalchemy import SQLAlchemy, Model
@@ -39,6 +39,64 @@ def submit():
     return render_template("submit.html")
 
 
+@app.route('/view')
+def view_map():
+    return render_template("view.html")
+
+
+@app.route('/help')
+def help_view():
+    return render_template("help.html")
+
+
+@app.route('/data/<label_name>')
+def show_results(label_name):
+    return render_template("data.html", marker=label_name)
+
+
+@app.route('/api/data/<label_name>')
+def get_data(label_name):
+
+    """
+    The default number of data points per page is 100. This may be adjusted at
+    some point. If start_date and end_date are given, all data points between
+    them will be returned. If they are equal, all data points for that day will
+    be returned.
+
+    :param label_name:   The name of the station ie: NY1007
+    :param page=:        The page number that you are trying to reach.
+    :param start_date=:  The start date in POSIX to get all data after this date.
+    :param end_date=:    The end date in POSIX to get all data before this date.
+    :param per_page=:    Number of results you want to return per page.
+
+    :return: A paginated list of data points in lists of 25 max
+    """
+
+    results_per_page = int(request.args.get('per_page', 1000))
+    page = int(request.args.get('page', 1))
+
+    station = Station.query.filter_by(name=label_name).first()
+    data_points = Data.query.filter_by(station_id=station.id). \
+        paginate(page, results_per_page)
+
+    data = [d.serialize() for d in data_points.items]
+    response = {
+        'station_id': station.name,
+        'pagination': {
+            'has_next': data_points.has_next,
+            'has_prev': data_points.has_prev,
+            'next_num': data_points.next_num,
+            'current_page': data_points.page,
+            'total_pages': data_points.pages,
+            'per_page': data_points.per_page,
+            'prev_num': data_points.prev_num,
+            'total_results': data_points.total
+        },
+        'data': data
+    }
+    return jsonify(response)
+
+
 @app.route('/submit_confirm', methods=['POST'])
 def submit_confirm():
     form = request.form
@@ -56,11 +114,12 @@ def submit_confirm():
                                    water_clarity=form['clarity_value'])
         except ValueError:
             return render_template("submit.html",
-                               error="The measurement entered was formatted incorrectly. Make sure you only use numbers."), 400
+                                   error="The measurement entered was formatted incorrectly. Make sure you only use numbers."), 400
     else:
         return render_template("submit.html",
                                error="No location "+marker+". Please verify the marker ID and resubmit."), 400
 
+        # TODO: Upload image and store url in the database.
         # if request.method == 'POST':
         # uploaded_file = request.files['picture']
         # else:
@@ -71,17 +130,6 @@ def submit_confirm():
         # send_email(os.path.join(app.config['UPLOAD_FOLDER'], filename), form)
         # water_level = form['Water_Level']
 
-@app.route('/view')
-def view_map():
-    return render_template("view.html")
 
 
-@app.route('/help')
-def help_view():
-    return render_template("help.html")
-
-
-@app.route('/data/<label_name>')
-def show_results(label_name):
-    return render_template("data.html", marker=label_name)
 
