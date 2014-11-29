@@ -1,3 +1,4 @@
+from flask import url_for
 from sqlalchemy.orm import relationship
 from app import db
 
@@ -9,16 +10,29 @@ class Station(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     state = db.Column(db.String(80), unique=True)
-    identification_number = db.Column(db.Integer)
+    id_number = db.Column(db.Integer)
+
     name = db.Column(db.String(160), unique=True)
+    long_name = db.Column(db.String(160))
 
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
 
-    online = db.Column(db.Boolean)
+    online = db.Column(db.Boolean, default=True)
 
     # One to many to data points
     data_points = relationship("Data", backref='stations', lazy="joined")
+
+    def serialize(self):
+        return {
+            'name': self.name,
+            'state': self.state,
+            'identification_number': self.identification_number,
+            'latitude': self.latitude,
+            'longitgude': self.longitude,
+            'online': self.online,
+            'data_url': url_for("get_data", label_name=self.name, _external=True)
+        }
 
     def __init__(self, **kwargs):
         self.__dict__.update(**kwargs)

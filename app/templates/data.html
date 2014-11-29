@@ -1,190 +1,137 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>{{marker}}</title>
-    <script type="text/javascript" src="http://d3js.org/d3.v2.min.js"></script>
-<style type="text/css">
-body {
-  font: 10px sans-serif;
-}
+    <head>
+        <title>{{ marker }} Data Listing</title>
+        <script type="text/javascript" src="../static/js/Chart.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"">
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
+    <link rel="apple-touch-icon" href="/custom_icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script type="text/javascript">
+      if(("standalone" in window.navigator) && window.navigator.standalone){
+        var noddy, remotes = false;
+        document.addEventListener('click', function(event) {
+          noddy = event.target;
+          while(noddy.nodeName !== "A" && noddy.nodeName !== "HTML") {
+        noddy = noddy.parentNode;
+          }
+          if('href' in noddy && noddy.href.indexOf('http') !== -1 && (noddy.href.indexOf(document.location.host) !== -1 || remotes)){
+        event.preventDefault();
+        document.location.href = noddy.href;
+          }
+        },false);
+      }
+      </script>
 
-.x.axis path {
-  display: none;
-}
+        <!-- Bootstrap -->
+        <link href="../static/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="../static/navbar-green.css" rel="stylesheet" media="screen">
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="../static/dist/js/bootstrap.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 1.5px;
-}
-</style>
+    </head>
+    <body>
+        <div class="container" style="padding-top:75px">
+            <div class="row">
+                <div class="col-xs-12" id="chart-container">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
 
-<script>
-var supportsOrientationChange = "onorientationchange" in window,
-    orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
-window.addEventListener(orientationEvent, function() {
-    //alert('HOLY ROTATING SCREENS BATMAN:' + window.orientation + " " + screen.width);
-    if(window.orientation===0){
-       document.getElementById("d3").style.display = 'none';
-        document.getElementById("rotate_statement").style.display = 'block';
-    } else {
-      document.getElementById("d3").style.display = 'block';
-       document.getElementById("rotate_statement").style.display = 'none';
-    }
-}, false);
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table table-hover ">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Water Level</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-data-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script>
 
-function hide(){
-  if(window.orientation===0){
-       document.getElementById("d3").style.display = 'none';
-        document.getElementById("rotate_statement").style.display = 'block';
-    } else {
-      document.getElementById("d3").style.display = 'block';
-       document.getElementById("rotate_statement").style.display = 'none';
-    }
-}
-</script>
-</head>
-<body onload="hide()">
+            var myChart = $("#myChart");
+            var ctx = myChart.get(0).getContext("2d");
 
-  <script type="text/javascript">
-var arrData = [
-    ["2012-10-02",200],
-    ["2012-10-09", 300], 
-    ["2012-10-12", 150]];
-     
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-var parseDate = d3.time.format("%m/%d/%Y %H:%M:%S").parse;
+            var data = {
+                labels: [],
+                datasets: [
+                    {
+                        label: "{{ marker }} Readings",
+                        fillColor: "rgba(151,187,205,0.2)",
+                        strokeColor: "rgba(151,187,205,1)",
+                        pointColor: "rgba(151,187,205,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(151,187,205,1)",
+                        data: []
+                    }
+                ]
+            };
 
-var data=0;
-
-var x = d3.time.scale()
-    .range([0, width])
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
-
-var line = d3.svg.line()
-    .x(function(d) { return x(d["Date and Time"]); })
-    .y(function(d) { return y(+d["Gage Height (ft)"]); });
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .attr("id","d3")
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  /*var data = arrData.map(function(d) {
-      return {
-         date: parseDate(d[0]),
-         close: d[1]
-      };
-      
-  });*/
-
-  //console.log(data);
+            {% raw %}
+                var options = {
+                        scaleShowGridLines : true,
+                        scaleGridLineColor : "rgba(0,0,0,.05)",
+                        scaleGridLineWidth : 1,
+                        bezierCurve : true,
+                        bezierCurveTension : 0.4,
+                        pointDot : true,
+                        pointDotRadius : 4,
+                        pointDotStrokeWidth : 1,
+                        pointHitDetectionRadius : 20,
+                        datasetStroke : true,
+                        datasetStrokeWidth : 2,
+                        datasetFill : true,
+                        responsive : true,
+                        scaleLabel : "<%= Number(value) + ' in.'%>",
+                        tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> in."
+                };
+            {% endraw %}
 
 
-    d3.csv("../static/data/{{marker}}.csv", function(csv) {
-      //alert(csv);
-        data = csv;
-        console.log(data);
-        //alert(parseDate(data[0]["Date and Time"]));
-        for (var i=0;i<data.length;i++) {
-            //code
+            $.get("/api/data/{{ marker }}", function(response) {
 
-            data[i]["Date and Time"]=parseDate(data[i]["Date and Time"]);
-        }
-        
-        //alert(csv);
-        //redraw();
-        draw();
-    });
-    
-  /*d3.csv("./NY1009.csv", function(da) {
-   alert(da[0]["Date and Time"]);
-   data=da;
-   //alert("success");
-  return {
-    date: parseDate(da["Date and Time"]), // convert "Year" column to Date
-    height: +da["Gage Height (ft)"]
-  };
-}, function(error, rows) {
-  console.log(rows);
-});*/
+                for(i =0; i < response.data.length; i++) {
 
+                    // Push our data to the chart
+                    data.datasets[0].data.push(response.data[i].water_level);
 
-function draw(){
-//alert(data.length);
+                    // Do some date formatting and push it to the labels list
+                    date = new Date(response.data[i].created_at*1000);
+                    label = date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
+                    data.labels.push(label);
+                }
 
-/*var newData = data.map(function(d) {
-      return {
-         date: parseDate(d[0]),
-         close: d[1]
-      };
-      
-  });*/
-var newData = data;
+                // AJAX so we need to init the graph in the callback.
+                new Chart(ctx).Line(data, options);
 
-  x.domain(d3.extent(newData, function(d) { return d["Date and Time"]; }));
-  y.domain(d3.extent(newData, function(d) { return +d["Gage Height (ft)"]; }));
+                /*
+                * Adjustment for the responsive scaling.
+                * We use a padding of 30px; 15px on each side.
+                */
+                myChart.width(myChart.width()-60);
 
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+                // Finally lets populate our table
+                var table = $("#table-data-body");
+                for (i=data.labels.length-1; i>-1; i--){
+                    date = data.labels[i];
+                    wl = data.datasets[0].data[i];
+                    table.append("<tr><td>" + date + "</td><td>" + wl + "</td></tr>");
+                }
+            });
 
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Gauge Height (ft.)");
-
-svg.append("text")
-        .attr("x", (width / 2))             
-        .attr("y", 0 - (margin.top / 2))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
-        .style("text-decoration", "underline")  
-        .text("{{marker}} Graph");
-
-  svg.append("path")
-      .datum(newData)
-      .attr("class", "line")
-      .attr("d", line);
-}
-	</script>
-<div id="rotate_statement">
-  <h1>
-    Please rotate device to view graph!
-  </h1>
-</div>
-
-  </body>
-<footer>
-    <FORM><INPUT Type="button" VALUE="Back" onClick="history.go(-1);return true;"></FORM>
-    
-</footer>
+        </script>
+    </body>
 </html>
+
+{% extends "header.shtml" %}

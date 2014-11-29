@@ -33,8 +33,6 @@ function map(){
       maxZoom: 18,
       
     }).addTo(map);
-
-                
                 $.ajax("../static/location.csv", {
                     success: function(data) {
                         //alert("presuccess");
@@ -47,7 +45,7 @@ function map(){
       //alert(json.length);
             for(var i=0;i<json.length; i++){
               //alert(json[i]["ID"]);
-              L.marker([json[i]["Lat"], json[i]["Long"]]).addTo(map).bindPopup("<b>Gauge: "+json[i]["ID"]+"</b><br />"+json[i]["Location"]+"<br><a href=./data/"+json[i]["ID"]+">View Data</a>");
+              L.marker([json[i]["Lat"], json[i]["Long"]]).addTo(map).bindPopup("<b>Gauge: "+json[i]["ID"]+"</b><br />"+json[i]["Location"]+"<br><a href=./view/"+json[i]["ID"]+">View Data</a>");
             }
                     },
                     error: function() {

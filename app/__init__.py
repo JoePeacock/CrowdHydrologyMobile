@@ -20,7 +20,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./crowd_hydrology.db'
 db = SQLAlchemy(app)
 from app.models.station import Station
 from app.models.data import Data
-
 db.create_all()
 
 
@@ -39,24 +38,49 @@ def submit():
     return render_template("submit.html")
 
 
-@app.route('/view')
-def view_map():
-    return render_template("view.html")
-
-
 @app.route('/help')
 def help_view():
     return render_template("help.html")
 
 
-@app.route('/data/<label_name>')
+@app.route('/view')
+def view_map():
+    return render_template("view.html")
+
+
+@app.route('/view/<label_name>')
 def show_results(label_name):
+    label_name = label_name.upper()
     return render_template("data.html", marker=label_name)
+
+
+@app.route('/api/stations')
+def get_stations():
+
+    results_per_page = int(request.args.get('per_page', 1000))
+    page = int(request.args.get('page', 1))
+
+    station = Station.query.paginate(page, results_per_page)
+
+    data = [s.serialize() for s in station.items]
+    response = {
+        'pagination': {
+            'has_next': station.has_next,
+            'has_prev': station.has_prev,
+            'next_num': station.next_num,
+            'current_page': station.page,
+            'total_pages': station.pages,
+            'per_page': station.per_page,
+            'prev_num': station.prev_num,
+            'total_results': station.total
+        },
+        'data': data
+    }
+    return jsonify(response)
 
 
 @app.route('/api/data/<label_name>')
 def get_data(label_name):
-
     """
     The default number of data points per page is 100. This may be adjusted at
     some point. If start_date and end_date are given, all data points between
@@ -72,6 +96,7 @@ def get_data(label_name):
     :return: A paginated list of data points in lists of 25 max
     """
 
+    label_name = label_name.upper()
     results_per_page = int(request.args.get('per_page', 1000))
     page = int(request.args.get('page', 1))
 
@@ -114,7 +139,7 @@ def submit_confirm():
                                    water_clarity=form['clarity_value'])
         except ValueError:
             return render_template("submit.html",
-                                   error="The measurement entered was formatted incorrectly. Make sure you only use numbers."), 400
+                                   error='The measurement entered was formatted incorrectly. Make sure you only use numbers.'), 400
     else:
         return render_template("submit.html",
                                error="No location "+marker+". Please verify the marker ID and resubmit."), 400
