@@ -1,0 +1,64 @@
+{% extends "layout.jinja" %}
+
+{% block title %}Add Admin{% endblock %}
+
+{% block navigation %}
+    {{ super() }}
+{% endblock %}
+
+{% block title_icon %}add circle icon{% endblock %}
+{% block page_title %}New Admin{% endblock %}
+{% block sub_title %}Create a new admin to login and access this dashboard.{% endblock %}
+
+{% block content %}
+
+    {{ super() }}
+
+    <div class="ui divider"></div>
+
+    <form method="POST" action="{{ url_for("new_admin") }}">
+        <div class="ui error form segment">
+
+            {% if error %}
+                <div class="ui error message">
+                    <div class="header">Creation Error</div>
+                    <p>{{ error }}</p>
+                </div>
+            {% endif %}
+
+            {% if success %}
+                <div class="ui positive message">
+                    <div class="header">Success!</div>
+                    <p>{{ success }}</p>
+                </div>
+            {% endif %}
+
+            <div class="required field">
+                <label>Email</label>
+                <div class="ui icon input">
+                    <input type="text" placeholder="Email Address" name="email">
+                    <i class="user icon"></i>
+                </div>
+            </div>
+
+            <div class="required field">
+                <label>Password</label>
+                <div class="ui icon input">
+                    <input type="password" name="password">
+                    <i class="lock icon"></i>
+                </div>
+            </div>
+
+            <div class="required field">
+                <label>Password Again</label>
+                <div class="ui icon input">
+                    <input type="password" name="password_check">
+                    <i class="lock icon"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="ui submit button green">Save</button>
+        </div>
+    </form>
+
+{% endblock %}

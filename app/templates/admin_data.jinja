@@ -1,0 +1,117 @@
+{% extends "layout.jinja" %}
+
+{% block title %}Data Points{% endblock %}
+
+{% block title_icon %}list layout icon{% endblock %}
+{% block page_title %}Data Points Management{% endblock %}
+{% block sub_title %}Edit and delete all data points.{% endblock %}
+
+{% block content %}
+    {{ super() }}
+
+
+
+    <div class="ui segment">
+
+        <div class="ui row eight">
+
+            <div class="left floated column">
+                <h2 class="ui header paginate">Measurements
+                    <div class="sub header">
+                        Showing ({{ data.per_page*data.prev_num }} to {{ data.per_page*data.page }}) of {{ data.total }}
+                    </div>
+                </h2>
+            </div>
+
+            <div class="right floated column">
+                <div class="ui buttons">
+                    <div class="ui button"># of Results</div>
+                    <div class="ui combo top right pointing dropdown icon button">
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <a class="item" href="?per_page=10">Show 10</a>
+                            <a class="item" href="?per_page=25">Show 25</a>
+                            <a class="item" href="?per_page=50">Show 50</a>
+                            <a class="item" href="?per_page=100">Show 100</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table class="ui table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Location ID</th>
+                    <th>Water Level</th>
+                    <th>Water Clarity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for point in data.items %}
+                <tr>
+                    <td>{{ point.created_at|humanize }}</td>
+                    <td>{{ (point.station_id|get_station).name }}</td>
+                    <td>{{ point.water_level }}</td>
+                    <td>{{ point.water_clarity|water_color }}</td>
+                    <td>
+                        <a class="ui icon button">
+                            <i class="write icon"></i>
+                        </a>
+                        <a class="ui icon button red">
+                            <i class="trash icon"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+        <div class="center aligned column row">
+            <div class="column">
+          <div class=pagination>
+
+          {% if data.has_prev %}
+          <a class="ui label icon" href="?page={{ data.prev_num }}">
+              <i class="angle left icon"></i>
+          </a>
+          {% endif %}
+
+          {%- for page in data.iter_pages() %}
+              {% if page %}
+                  {% if page != data.page %}
+                      <a class="ui label" href="{{ url_for("admin_data", page=page) }}">{{ page }}</a>
+                  {% else %}
+                      <div class="ui label blue">
+                          {{ page }}
+                      </div>
+                  {% endif %}
+              {% else %}
+                  <span class=ellipsis>…</span>
+              {% endif %}
+          {%- endfor %}
+
+          {% if data.has_next %}
+          <a class="ui label icon" href="?page={{ data.next_num }}">
+              <i class="angle right icon"></i>
+          </a>
+          {% endif %}
+
+          </div>
+            </div>
+        </div>
+
+    </div>
+<script>
+
+        console.log($(".combo.dropdown"));
+
+        $(".combo.dropdown").dropdown({
+            transition: 'drop',
+            action: 'combo'
+        });
+    </script>
+{% endblock %}

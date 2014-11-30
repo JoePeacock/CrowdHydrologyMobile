@@ -1,0 +1,53 @@
+{% extends "layout.jinja" %}
+
+{% block title %}Login{% endblock %}
+
+{% block navigation %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="ui grid">
+
+        <div class="sixteen wide column">
+            <h2 class="login-title">Crowd Hydrology Login</h2>
+        </div>
+
+        <div class="ten wide column">
+            <form method="POST" action="{{ url_for("login") }}">
+                <div class="ui error form segment">
+                    {% if error %}
+                        <div class="ui error message">
+                            <div class="header">Authentication Error</div>
+                            <p>{{ error }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="required field">
+                        <label>Email</label>
+                        <div class="ui icon input">
+                            <input type="text" placeholder="Your Email Address" name="email">
+                            <i class="user icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="required field">
+                        <label>Password</label>
+                        <div class="ui icon input">
+                            <input type="password" name="password">
+                            <i class="lock icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="right floated column">
+                            <button type="submit" class="ui submit button primary">Login</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

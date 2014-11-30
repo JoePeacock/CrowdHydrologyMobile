@@ -6,15 +6,15 @@ var username;
 var lat,lon;
 var map;
 var speed1,speed2,speed3,speed4,speed5,speed6;
-function getLocation()
-  {
-  if (navigator.geolocation)
-    {
-        //alert("location works");
+
+function getLocation() {
+  if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
-    }
-  else{x.innerHTML="Geolocation is not supported by this browser.";}
+  } else{
+      x.innerHTML="Geolocation is not supported by this browser.";
   }
+}
+
 function showPosition(position)
   {
     //alert("setting...");
