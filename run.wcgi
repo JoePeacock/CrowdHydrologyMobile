@@ -1,0 +1,19 @@
+'''
+    Include the virutalenv in this WSGI file setup.
+'''
+activate_this = '/htdocs/www/smartphone/venv/bin/activate_this.py'
+execfile(activate_this, dict(__file__=activate_this))
+
+
+'''
+    Import the syspath for the actual application
+'''
+import sys
+sys.path.insert(0, '/htdocs/www/smartphone');
+
+from app import app as application
+
+
+
+
+
