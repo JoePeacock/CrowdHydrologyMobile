@@ -1,0 +1,28 @@
+/*******************************
+            Global
+*******************************/
+
+/*--------------
+      Demo
+---------------*/
+
+body .container {
+  width:1170px;
+  margin: 0px auto;
+}
+
+.login-title {
+    margin-top:10%;
+}
+
+body .container.admin {
+    padding-top:50px;
+}
+
+.ui.header.paginate {
+    margin-bottom: 15px;
+}
+
+.pagination {
+    padding: 20px 0;
+}

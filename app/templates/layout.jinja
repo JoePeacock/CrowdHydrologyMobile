@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        {% block head %}
+        <!-- Standard Meta -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+        <!-- Site Properities -->
+        <title>Crowd Hydrology | {% block title %}{% endblock %}</title>
+
+        <link rel="stylesheet" type="text/css" href="/static/dist/css/semantic.min.css">
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/dist/css/admin.css">
+
+        <!-- Used with Tab History !-->
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+        <script src="/static/dist/js/semantic.min.js"></script>
+        {% endblock %}
+
+    </head>
+
+    <body>
+        <div class="container admin">
+            <div class="ui grid">
+                <div class="three wide column">
+                    {% block navigation %}
+                        <div class="ui vertical menu">
+
+                            <a class="item">
+                                <i class="dashboard icon"></i> Home / Dashboard
+                            </a>
+
+                            <div class="item">
+                                <i class="grid layout icon"></i> Stations
+                                <div class="menu">
+                                    <a class="item">Manage Stations</a>
+                                    <a class="item green"><i class="add icon green"></i> New Station</a>
+                                </div>
+                            </dv>
+                               </div>
+
+                            <a class="item" href="{{ url_for("admin_data") }}">
+                                <i class="browser icon"></i> Data Points
+                            </a>
+
+                            <div class="item">
+                                <i class="setting icon"></i> Admin Settings
+                                <div class="menu">
+                                  <a class="item" href="{{ url_for("new_admin") }}">Manage Accounts</a>
+                                  <a class="item">Change Password</a>
+                                </div>
+                            </div>
+
+                            <a class="item" href="{{ url_for("logout") }}">
+                                <i class="sign out icon"></i> Sign out
+                            </a>
+
+                        </div>
+
+                    {% endblock %}
+                </div>
+                <div class="twelve wide column">
+                    {% block content %}
+                        <h2 class="ui header">
+                            <i class="{% block title_icon %}{% endblock %}"></i>
+                            <div class="content">
+                                {% block page_title %}{% endblock %}
+                                <div class="sub header">
+                                    {% block sub_title %}{% endblock %}
+                                </div>
+                            </div>
+                        </h2>
+                        <div class="ui divider"></div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
