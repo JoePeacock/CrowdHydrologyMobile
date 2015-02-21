@@ -121,7 +121,7 @@ def admin_data():
     if page == -1:
         data = Data.query.order_by(Data.created_at.desc())
     else:
-        data = Data.query.order_by(Data.created_at.desc()).paginate(page, limit)
+        data = Data.query.paginate(page, limit)
     return render_template("admin_data.jinja", data=data)
 
 

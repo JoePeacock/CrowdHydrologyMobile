@@ -53,7 +53,7 @@
                 {% for point in data.items %}
                 <tr>
                     <td>{{ point.created_at|humanize }}</td>
-                    <td>{{ (point.station_id|get_station).name }}</td>
+                    <td>{{ point.station_id }}</td>
                     <td>{{ point.water_level }}</td>
                     <td>{{ point.water_clarity|water_color }}</td>
                     <td>
