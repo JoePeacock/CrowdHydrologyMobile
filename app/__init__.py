@@ -208,7 +208,6 @@ def get_data(label_name):
     :return: A paginated list of data points in lists of 25 max
     """
 
-
     label_name = label_name.upper()
     results_per_page = int(request.args.get('per_page', 1000))
     page = int(request.args.get('page', 1))

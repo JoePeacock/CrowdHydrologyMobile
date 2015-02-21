@@ -1,5 +1,6 @@
 var lat,lon;
 var map;
+var speed1,speed2,speed3,speed4,speed5,speed6;
 
 function getLocation() {
   if (navigator.geolocation) {
