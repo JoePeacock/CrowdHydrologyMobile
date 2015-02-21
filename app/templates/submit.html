@@ -72,70 +72,110 @@
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="../static/dist/js/bootstrap.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-     </head>
-  
-  
-  
-<body style="padding-top: 50px;font-family: 'Raleway', sans-serif;">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-<center><p class="title-dark">Submit</p></center>
-    <hr width="60%">
+    <script>
+        var getLocation = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
 
-<form class="form-horizontal" role="form" style="padding:10px;" action="/submit_confirm" method="post" id="theForm" enctype=multipart/form-data>
-  <div class="form-group">
-    <label for="marker" class="col-sm-2 control-label">Station Identificiation Number</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="markerID" placeholder="Ex. MI1007" name="marker">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="Water_Level" class="col-sm-2 control-label">Water Level</label>
-    <div class="col-sm-10">
-        <div class="input-group">
-            <input type="number" class="form-control" id="waterLevel" placeholder="Water Level" name="Water_Level">
-            <span class="input-group-addon">In.</span>
+            function showPosition(position) {
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+                $.get("/api/stations?lat=" + latitude + "&long=" + longitude, function (response) {
+                    // We need to slap the station ID into the id slot.
+                    $("#markerID").val(response.station.id);
+                });
+            }
+        }
+    </script>
+</head>
+
+<body onload="getLocation();" style="padding-top: 50px;font-family: 'Raleway', sans-serif;">
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Submit</h2>
+            <hr>
         </div>
     </div>
-  </div>
- 
-  <div class="form-group">
-    <label for="inputPassword3" class="col-sm-2 control-label">Water Level Clarity</label>
-    <div class="col-sm-10">
-       <div class="radio">
-            <label>
-              <input type="radio" name="clarityRadios" id="clarityRadios1" value="clear" checked>
-              Clear
-            </label>
-          </div>
-          <div class="radio">
-            <label>
-              <input type="radio" name="clarityRadios" id="clarityRadios2" value="sCloudy">
-              Slightly Cloudy
-            </label>
-          </div>
-          <div class="radio">
-            <label>
-              <input type="radio" name="clarityRadios" id="clarityRadios3" value="cloudy">
-                Cloudy
-            </label>
-          </div>
-          <div class="radio">
-            <label>
-              <input type="radio" name="clarityRadios" id="clarityRadios4" value="murky">
-              Murky
-            </label>
-          </div>
+
+    {% if error %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-danger">{{ error }}</div>
+        </div>
     </div>
-  </div>
-   <div class="form-group" style="width:80%;">
-    <div class="col-sm-10">
-    <label for="picture">Picture of Water Level</label>
-    <input type="file" name="picture" id="inputFile">
-    <p class="help-block">Please take a picture of the water level measurement.</p>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="form-horizontal" role="form" style="padding:10px;" action="/submit_confirm" method="post" id="theForm" enctype=multipart/form-data>
+
+                  <div class="form-group">
+                    <label for="marker" class="col-sm-2 control-label">Station ID</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="markerID" placeholder="We are grabbing the closest meter automatically..." name="marker">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="Water_Level" class="col-sm-2 control-label">Water Level</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input type="numer" step="any" class="form-control" id="waterLevel" placeholder="Water Level" name="water_level" required>
+                            <span class="input-group-addon">In.</span>
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">Water Level Clarity</label>
+
+                    <div class="col-sm-10">
+
+                       <div class="radio">
+                            <label>
+                              <input type="radio" name="clarity_value" id="clarityRadios1" value="0" checked>
+                              Clear
+                            </label>
+                       </div>
+
+                       <div class="radio">
+                            <label>
+                              <input type="radio" name="clarity_value" id="clarityRadios2" value="1">
+                              Slightly Cloudy
+                            </label>
+                       </div>
+
+                       <div class="radio">
+                            <label>
+                              <input type="radio" name="clarity_value" id="clarityRadios3" value="2">
+                                Cloudy
+                            </label>
+                       </div>
+
+                       <div class="radio">
+                            <label>
+                              <input type="radio" name="clarity_value" id="clarityRadios4" value="3">
+                              Murky
+                            </label>
+                       </div>
+                  </div>
+                </div>
+
+                <hr>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
     </div>
-  </div>
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
+</div>
+
+
 
 </body>
     
