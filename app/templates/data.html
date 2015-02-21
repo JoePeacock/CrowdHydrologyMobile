@@ -96,7 +96,7 @@
                         scaleShowGridLines : true,
                         scaleGridLineColor : "rgba(0,0,0,.05)",
                         scaleGridLineWidth : 1,
-                        bezierCurve : true,
+                        bezierCurve : false,
                         bezierCurveTension : 0.4,
                         pointDot : true,
                         pointDotRadius : 4,
@@ -106,15 +106,15 @@
                         datasetStrokeWidth : 2,
                         datasetFill : true,
                         responsive : true,
-                        scaleLabel : "<%= Number(value) + ' in.'%>",
-                        tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> in."
+                        scaleLabel : "<%= Number(value) + ' ft.'%>",
+                        tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> ft."
                 };
             {% endraw %}
 
 
             $.get("/api/data/{{ marker }}?per_page=8", function(response) {
 
-                for(i =0; i < response.data.length; i++) {
+                for(i=response.data.length-1; i >0; i--) {
 
                     // Push our data to the chart
                     data.datasets[0].data.push(response.data[i].water_level);
@@ -122,6 +122,7 @@
                     // Do some date formatting and push it to the labels list
                     date = new Date(response.data[i].created_at*1000);
                     label = date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
+			// + " - " + date.getHours() + ":" + date.getMinutes();
                     data.labels.push(label);
                 }
 
@@ -136,10 +137,10 @@
 
                 // Finally lets populate our table
                 var table = $("#table-data-body");
-                for (i=data.labels.length-1; i>-1; i--){
+                for (i=data.labels.length-1; i>0; i--){
                     date = data.labels[i];
                     wl = data.datasets[0].data[i];
-                    table.append("<tr><td>" + date + "</td><td>" + wl + "</td></tr>");
+                    table.append("<tr><td>" + date + "</td><td>" + wl + " ft.</td></tr>");
                 }
 
                 $("#num-readings").append(response.pagination.total_results);

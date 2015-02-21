@@ -213,8 +213,8 @@ def get_data(label_name):
     page = int(request.args.get('page', 1))
 
     station = Station.query.filter_by(name=label_name).first()
-    data_points = Data.query.filter_by(station_id=station.id). \
-        paginate(page, results_per_page)
+
+    data_points = Data.query.filter_by(station_id=station.id).order_by(Data.created_at.desc()).paginate(page, results_per_page)
 
     data = [d.serialize() for d in data_points.items]
     response = {
