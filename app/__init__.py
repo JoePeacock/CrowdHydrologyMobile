@@ -1,5 +1,5 @@
 import arrow
-from flask import Flask, jsonify, url_for, redirect
+from flask import Flask, jsonify, url_for, redirect, json
 
 from flask import render_template
 from flask import request
@@ -189,6 +189,52 @@ def get_stations():
         'data': data
     }
     return jsonify(response)
+
+
+@app.route('/api/data', methods=["POST"])
+def get_data_query():
+    """
+    Endpoint that returns collective stations, and data points for generating a
+    shapefile in ArcGIS. If both Timestamps and stations are included in the
+    filter, the results will include the dataset's for each station within
+    that time frame.
+
+    :param  start_time=:    POSIX timestamp for time frame of data requested.
+    :param  end_time=:      POSIX timestamp for time frame of data requested.
+    :param  stations=:      A list of station_ids to include in the data set.
+    :return:
+    """
+
+    input = request.json
+    start_time = input.get("start_time", 0)
+    end_time = input.get("end_time", arrow.now().timestamp)
+    station_ids = input.get("stations", [])
+
+    stations_list = []
+    if len(station_ids) > 0:
+        for station_id in station_ids:
+            stations_list.append(db.sesssion.query(Station).join(Station.data_points).filter(Data.created_at >= arrow.get(start_time), Data.created_at <= arrow.get(end_time)))
+        return jsonify({
+            "data": stations_list,
+            "number_results": len(station_ids),
+            "query": {
+                "start_time": start_time,
+                "end_time": end_time,
+                "station_ids": station_ids
+            }
+        })
+    else:
+        station = db.session.query(Station).join(Station.data_points).filter(Data.created_at >= arrow.get(start_time), Data.created_at <= arrow.get(end_time)).all()
+        data = [s.serialize_data() for s in station]
+        return jsonify({
+            "data": data,
+            "number_results": len(station),
+            "query": {
+                "start_time": start_time,
+                "end_time": end_time,
+                "station_ids": station_ids
+            }
+        })
 
 
 @app.route('/api/data/<label_name>')

@@ -21,7 +21,7 @@ class Station(db.Model):
     online = db.Column(db.Boolean, default=True)
 
     # One to many to data points
-    data_points = relationship("Data", backref='stations', lazy="joined")
+    data_points = relationship("Data", backref='stations')
 
     def serialize(self):
         return {
@@ -32,6 +32,17 @@ class Station(db.Model):
             'longitgude': self.longitude,
             'online': self.online,
             'data_url': url_for("get_data", label_name=self.name, _external=True)
+        }
+
+    def serialize_data(self):
+        return {
+            'name': self.long_name,
+            'state': self.state,
+            'station_id': self.name,
+            'latitude': self.latitude,
+            'longitgude': self.longitude,
+            'online': self.online,
+            'data_points': [d.serialize() for d in self.data_points]
         }
 
     def __init__(self, **kwargs):
