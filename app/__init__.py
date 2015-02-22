@@ -105,7 +105,8 @@ def new_admin():
 def admin_home():
     active_stations = Station.query.filter_by(online=True).count()
     data_points_count = Data.query.count()
-    most_active = Station.query.filter(or_(and_(func.length(Station.data_points) > 0))).first()
+    most_active = Station.query.filter(
+        or_(and_(func.length(Station.data_points) > 0))).first()
     data_points = Data.query.order_by(Data.created_at.desc()).limit(10)
     return render_template("admin_home.jinja", active_stations=active_stations,
                            total_data_count=data_points_count,
@@ -209,14 +210,23 @@ def get_data_query():
     start_time = input.get("start_time", 0)
     end_time = input.get("end_time", arrow.now().timestamp)
     station_ids = input.get("stations", [])
-
     stations_list = []
+    total_data_points = 0
+
     if len(station_ids) > 0:
         for station_id in station_ids:
-            stations_list.append(db.sesssion.query(Station).join(Station.data_points).filter(Data.created_at >= arrow.get(start_time), Data.created_at <= arrow.get(end_time)))
+            station = db.session.query(Station).join(Station.data_points).\
+                filter(Data.created_at >= arrow.get(start_time),
+                       Data.created_at <= arrow.get(end_time),
+                       Station.id == station_id).\
+                first()
+            if station:
+                stations_list.append(station.serialize_data())
+                total_data_points += len(station.data_points)
         return jsonify({
             "data": stations_list,
-            "number_results": len(station_ids),
+            "station_count": len(stations_list),
+            "data_point_count": total_data_points,
             "query": {
                 "start_time": start_time,
                 "end_time": end_time,
@@ -224,7 +234,9 @@ def get_data_query():
             }
         })
     else:
-        station = db.session.query(Station).join(Station.data_points).filter(Data.created_at >= arrow.get(start_time), Data.created_at <= arrow.get(end_time)).all()
+        station = db.session.query(Station).join(Station.data_points).filter(
+            Data.created_at >= arrow.get(start_time),
+            Data.created_at <= arrow.get(end_time)).all()
         data = [s.serialize_data() for s in station]
         return jsonify({
             "data": data,
@@ -260,7 +272,8 @@ def get_data(label_name):
 
     station = Station.query.filter_by(name=label_name).first()
 
-    data_points = Data.query.filter_by(station_id=station.id).order_by(Data.created_at.desc()).paginate(page, results_per_page)
+    data_points = Data.query.filter_by(station_id=station.id).order_by(
+        Data.created_at.desc()).paginate(page, results_per_page)
 
     data = [d.serialize() for d in data_points.items]
     response = {
@@ -308,16 +321,16 @@ def submit_confirm():
         return render_template("submit.html",
                                error="No location "+marker+". Please verify the marker ID and resubmit."), 400
 
-        # TODO: Upload image and store url in the database.
-        # if request.method == 'POST':
-        # uploaded_file = request.files['picture']
-        # else:
-        # send_mail_no_image(form)
-        # if uploaded_file and allowed_file(uploaded_file.filename):
-        # filename = secure_filename(uploaded_file.filename)
-        # uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # send_email(os.path.join(app.config['UPLOAD_FOLDER'], filename), form)
-        # water_level = form['Water_Level']
+    # TODO: Upload image and store url in the database.
+    # if request.method == 'POST':
+    # uploaded_file = request.files['picture']
+    # else:
+    # send_mail_no_image(form)
+    # if uploaded_file and allowed_file(uploaded_file.filename):
+    # filename = secure_filename(uploaded_file.filename)
+    # uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    # send_email(os.path.join(app.config['UPLOAD_FOLDER'], filename), form)
+    # water_level = form['Water_Level']
 
 
 
